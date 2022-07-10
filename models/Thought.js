@@ -1,18 +1,20 @@
 const { Schema, model } = require('mongoose');
+const Reaction = require("./Reaction");
 
 // Schema to create User model
 const userSchema = new Schema(
     {
+        thoughtText: { type: String, required: true, minLength: 1, maxLength: 280, },
+        createdAt: { type: Date, default: Date.now, get: getDate },
         username: { type: String, required: true },
-        email: { type: String, unique: true, required: true, validate: [isEmail, "invalid email"] },
-        thoughts: [{ type: Schema.Types.ObjectId, ref: "Thought", }],
-        friends: [{ type: Schema.Types.ObjectId, ref: "User", }]
+        reactions: [{ type: Schema.Types.ObjectId, ref: "Reaction" }]
     },
 
     {
         // Mongoose supports two Schema options to transform Objects after querying MongoDb: toJSON and toObject.
         // Here we are indicating that we want virtuals to be included with our response, overriding the default behavior
         toJSON: {
+            getters: true,
             virtuals: true,
         },
         id: false,
@@ -20,14 +22,22 @@ const userSchema = new Schema(
 );
 
 
-userSchema
-    .virtual('friendCount')
-    // Getter
+
+function getDate() {
+    return date;
+}
+
+
+
+thoughtSchema
+    .virtual("reactionCount")
     .get(function () {
-        return this.friends.length;
+        return this.reactions.length;
     });
 
-// Initialize our User model
-const User = model('user', userSchema);
 
-module.exports = User;
+
+
+const Thought = model('thought', thoughtSchema);
+
+module.exports = Thought;
