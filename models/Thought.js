@@ -14,19 +14,18 @@ const thoughtSchema = new Schema(
         // Mongoose supports two Schema options to transform Objects after querying MongoDb: toJSON and toObject.
         // Here we are indicating that we want virtuals to be included with our response, overriding the default behavior
         toJSON: {
-            getters: true,
-            virtuals: true,
+            getters: true
+            
         },
         id: false,
     }
 );
 
 
-
-function getDate() {
-    return date;
+function getDate(createdAt) {
+    // format timestamp here
+    return createdAt;
 }
-
 
 
 thoughtSchema

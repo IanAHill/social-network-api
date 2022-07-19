@@ -1,4 +1,4 @@
-const { User, Application } = require('../models');
+const { User, Thought } = require('../models');
 
 module.exports = {
   // Get all users
@@ -36,5 +36,21 @@ module.exports = {
     User.findOneAndUpdate({ _id: req.params.userId }, req.body)
       .then(() => res.json({ message: "User and associated apps updated!" }))
       .catch((err) => res.status(500).json(err));
+  },
+
+  addFriend(req, res) {
+    User.findOneAndUpdate({ _id: req.params.userId }, {$push:{friends: req.params.friendId}},{new:true})
+    .then((user) => {
+    res.status(200).json(user)
+    })
+    .catch((err) => res.status(500).json(err));
+  },
+  
+  deleteFriend(req, res) {
+    User.findOneAndUpdate({ _id: req.params.userId }, {$pull:{friends: req.params.friendId}},{new:true})
+    .then((user) => {
+    res.status(200).json(user)
+    })
+    .catch((err) => res.status(500).json(err));
   }
 };
